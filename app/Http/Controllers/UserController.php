@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\PaginateResource;
 use App\Http\Resources\UserResource;
 use App\Interfaces\UserRepositoriesInterface;
 use Exception;
@@ -44,12 +47,57 @@ class UserController extends Controller
         }
     }
 
+    public function getAllPaginated(Request $request)
+    {
+        $request = $request->validate([
+            'search' => 'nullable|string',
+            'row_per_page' => 'required|integer',
+        ]);
+
+        try {
+            $users = $this->userRepositories->getAllPaginated(
+                $request['search'] ?? null,
+                $request['row_per_page']
+            );
+
+            return ResponseHelper::jsonResponse(true, 'Data User Berhasil Diambil', PaginateResource::make($users, UserResource::class), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data User Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        $request = $request->validated();
+
+        try {
+            $user = $this->userRepositories->create($request);
+
+            return ResponseHelper::jsonResponse(true, 'Data User Berhasil Ditambahkan', UserResource::make($user), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data User Gagal Ditambahkan',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**
@@ -57,15 +105,56 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $user = $this->userRepositories->getById($id);
+
+            if (!$user) {
+                return ResponseHelper::jsonResponse(false, 'Data User Tidak Ditemukan', null, 404);
+            }
+
+            return ResponseHelper::jsonResponse(true, 'Data User Berhasil Diambil', UserResource::make($user), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data User Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserUpdateRequest $request, string $id)
     {
-        //
+        $request = $request->validated();
+        try {
+            $user = $this->userRepositories->getById($id);
+
+            if (!$user) {
+                return ResponseHelper::jsonResponse(false, 'Data User Tidak Ditemukan', null, 404);
+            }
+
+            $user = $this->userRepositories->update($id, $request);
+
+            return ResponseHelper::jsonResponse(true, 'Data User Berhasil Diupdate', UserResource::make($user), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data User Gagal Diupdate',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**
@@ -73,6 +162,26 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $user = $this->userRepositories->getById($id);
+
+            if (!$user) {
+                return ResponseHelper::jsonResponse(false, 'Data User Tidak Ditemukan', null, 404);
+            }
+
+            $user = $this->userRepositories->delete($id);
+            return ResponseHelper::jsonResponse(true, 'Data User Berhasil Dihapus', UserResource::make($user), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data User Gagal Dihapus',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 }
