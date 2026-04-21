@@ -2,17 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
+use App\Http\Resources\StudentResource;
+use App\Interfaces\StudentRepositoriesInterface;
 use App\Models\Student;
+use Exception;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
+
+    private StudentRepositoriesInterface $studentRepositories;
+
+    public function __construct(StudentRepositoriesInterface $studentRepositories)
+    {
+        $this->studentRepositories = $studentRepositories;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $students = $this->studentRepositories->getAll(
+                $request->search,
+                $request->limit,
+                true
+            );
+
+            return ResponseHelper::jsonResponse(true, 'Data Student Berhasil Diambil', StudentResource::collection($students), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Student Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**
