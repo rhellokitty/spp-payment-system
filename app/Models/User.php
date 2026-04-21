@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, UUID;
+    use HasFactory, Notifiable, UUID, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +38,12 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'Like', '%' . $search . '%')
+            ->orWhere('username', 'Like', '%' . $search . '%');
     }
 
     public function student()
