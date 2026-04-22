@@ -14,4 +14,9 @@ interface StudentRepositoriesInterface
         ?string $search,
         ?int $rowPerPage
     );
+
+    public function getById(
+        string $id,
+        array $data
+    );
 }

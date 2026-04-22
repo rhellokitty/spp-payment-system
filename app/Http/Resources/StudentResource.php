@@ -16,14 +16,14 @@ class StudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'class_room_id' => $this->class_room_id,
+            // 'class_room_id' => $this->class_room_id,
             'birth_date' => $this->birth_date,
             'parent_name' => $this->parent_name,
             'parent_phone_number' => $this->parent_phone_number,
             'address' => $this->address,
             'gender' => $this->gender,
             'status' => $this->status,
+            'user' => new UserResource($this->user),
         ];
     }
 }

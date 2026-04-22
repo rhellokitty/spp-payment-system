@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Resources\PaginateResource;
 use App\Http\Resources\StudentResource;
 use App\Interfaces\StudentRepositoriesInterface;
 use App\Models\Student;
@@ -32,6 +33,34 @@ class StudentController extends Controller
             );
 
             return ResponseHelper::jsonResponse(true, 'Data Student Berhasil Diambil', StudentResource::collection($students), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Student Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
+    }
+
+    public function getAllPaginated(Request $request)
+    {
+        $request = $request->validate([
+            'search' => 'nullable|string',
+            'row_per_page' => 'required|integer',
+        ]);
+
+        try {
+            $students = $this->studentRepositories->getAllPaginated(
+                $request['search'] ?? null,
+                $request['row_per_page']
+            );
+
+            return ResponseHelper::jsonResponse(true, 'Data Student Berhasil Diambil', PaginateResource::make($students, StudentResource::class), 200);
         } catch (Exception $e) {
             return ResponseHelper::jsonResponse(
                 false,
