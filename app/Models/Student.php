@@ -22,6 +22,15 @@ class Student extends Model
         'status',
     ];
 
+    public function scopeSearch($query, $search)
+    {
+        return $query->whereHas('user', function ($query) use ($search) {
+            $query->where('name', 'Like', '%' . $search . '%')
+                ->orWhere('username', 'Like', '%' . $search . '%')
+                ->orWhere('status', 'Like', '%' . $search . '%');
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
