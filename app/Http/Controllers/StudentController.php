@@ -8,10 +8,8 @@ use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Resources\PaginateResource;
 use App\Http\Resources\StudentResource;
 use App\Interfaces\StudentRepositoriesInterface;
-use App\Models\Student;
 use Exception;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class StudentController extends Controller
 {

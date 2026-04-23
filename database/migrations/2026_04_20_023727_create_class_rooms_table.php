@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('class_rooms', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('teacher_id')->constrained('teachers');
+            $table->foreignUuid('teacher_id')->nullable()->constrained('teachers');
 
             $table->string('school_level');
             $table->string('name');
@@ -21,6 +21,9 @@ return new class extends Migration
             $table->year('start_year');
             $table->year('end_year');
 
+            $table->unique(['name', 'grade', 'start_year']);
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }
