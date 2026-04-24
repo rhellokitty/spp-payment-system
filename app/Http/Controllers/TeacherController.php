@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Requests\TeacherStoreRequest;
+use App\Http\Requests\TeacherUpdateRequest;
 use App\Http\Resources\PaginateResource;
 use App\Http\Resources\TeacherResource;
 use App\Interfaces\TeacherRepositoriesInterface;
@@ -78,25 +80,109 @@ class TeacherController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TeacherStoreRequest $request)
     {
-        //
+        $request = $request->validated();
+
+        try {
+            $teachers = $this->teacherRepositories->create($request);
+
+            return ResponseHelper::jsonResponse(
+                true,
+                'Data Teacher Berhasil Ditambahkan',
+                TeacherResource::make($teachers),
+                200
+            );
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Teacher Gagal Ditambahkan',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Teacher $teacher)
+    public function show(string $id)
     {
-        //
+        try {
+            $teachers = $this->teacherRepositories->getById($id);
+
+            if (!$teachers) {
+                return ResponseHelper::jsonResponse(
+                    false,
+                    'Data Teacher Tidak Ditemukan',
+                    null,
+                    404
+                );
+            }
+
+            return ResponseHelper::jsonResponse(
+                true,
+                'Data Teacher Berhasil Diambil',
+                TeacherResource::make($teachers),
+                200
+            );
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Teacher Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Teacher $teacher)
+    public function update(TeacherUpdateRequest $request, string $id)
     {
-        //
+        $request = $request->validated();
+
+        try {
+            $teacher = $this->teacherRepositories->getById($id);
+
+            if (!$teacher) {
+                return ResponseHelper::jsonResponse(
+                    false,
+                    'Data Teacher  Tidak Ditemukan',
+                    null,
+                    404
+                );
+            }
+
+            $teacher = $this->teacherRepositories->update($id, $request);
+
+            return ResponseHelper::jsonResponse(
+                true,
+                'Data Teacher  Berhasil Diupdate',
+                TeacherResource::make($teacher),
+                200
+            );
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Teacher  Gagal Diupdate',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**

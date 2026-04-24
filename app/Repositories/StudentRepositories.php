@@ -83,8 +83,8 @@ class StudentRepositories implements StudentRepositoriesInterface
 
             $user = $userRepositories->update($student->user_id, [
                 'name' => $data['name'],
-                'username' => $data['username'],
-                'password' => bcrypt($data['password']),
+                'username' => $data['username'] ?? $student->user->username,
+                'password' => bcrypt($data['password']) ? bcrypt($data['password']) : $student->user->password,
             ]);
 
             $student->user_id = $user->id;

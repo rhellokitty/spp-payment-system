@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StudentStoreRequest extends FormRequest
+class TeacherStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,19 +27,15 @@ class StudentStoreRequest extends FormRequest
             'username' => 'required|string|unique:users,username',
             'password' => 'required|string',
             'role' => 'required|in:super_admin,admin,teacher,student',
-            'birth_date' => 'required|date',
-            'parent_name' => 'required|string',
-            'parent_phone_number' => 'required|string',
-            'address' => 'required|string',
-            'gender' => 'required|string',
-            'status' => 'required|string',
+            'academic_title' => 'required|string',
+            'phone_number' => 'required|string',
+            'email' => 'nullable|string',
         ];
     }
-
-    public function attributes()
+    public function attributes(): array
     {
         return [
-            'username' => 'NISN',
+            'username' => 'NIP',
         ];
     }
 }

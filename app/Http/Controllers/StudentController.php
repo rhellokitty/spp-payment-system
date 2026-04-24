@@ -84,7 +84,6 @@ class StudentController extends Controller
         $request = $request->validated();
 
         try {
-
             $student = $this->studentRepositories->create($request);
 
             return ResponseHelper::jsonResponse(
