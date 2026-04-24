@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('academic_title');
             $table->string('phone_number');
             $table->string('email')->unique();
-
+            
             $table->timestamps();
         });
     }

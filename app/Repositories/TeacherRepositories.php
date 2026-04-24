@@ -2,20 +2,20 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\ClassRoomRepositoriesInterface;
-use App\Models\ClassRoom;
+use App\Interfaces\TeacherRepositoriesInterface;
+use App\Models\Teacher;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class ClassRoomRepositories implements ClassRoomRepositoriesInterface
+class TeacherRepositories implements TeacherRepositoriesInterface
 {
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
-        $query = ClassRoom::where(function ($query) use ($search) {
+        $query = Teacher::where(function ($query) use ($search) {
             if ($search) {
                 $query->search($search);
             }
-        })->latest()->with('teacher', 'student');
+        })->latest()->with('user');
 
         if ($limit) {
             $query->limit($limit);
@@ -28,29 +28,29 @@ class ClassRoomRepositories implements ClassRoomRepositoriesInterface
         return $query;
     }
 
+    public function getById(string $id)
+    {
+        $query = Teacher::where('id', $id)->with('user');
+        return $query->first();
+    }
+
     public function getAllPaginated(?string $search, ?int $rowPerPage)
     {
         $query = $this->getAll($search, $rowPerPage, false);
         return $query->paginate($rowPerPage);
     }
 
-    public function create(array $data)
+    public function delete(string $id)
     {
         DB::beginTransaction();
 
         try {
-            $classRoom = new ClassRoom();
+            $student = Teacher::find($id)->with('user')->find($id);
+            $student->user()->delete();
+            $student->delete();
 
-            $classRoom->teacher_id = $data['teacher_id'];
-            $classRoom->school_level = $data['school_level'];
-            $classRoom->name = $data['name'];
-            $classRoom->grade = $data['grade'];
-            $classRoom->start_year = $data['start_year'];
-            $classRoom->end_year = $data['end_year'];
-
-            $classRoom->save();
             DB::commit();
-            return $classRoom;
+            return $student;
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());

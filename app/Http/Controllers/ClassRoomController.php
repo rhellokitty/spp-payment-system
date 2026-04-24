@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseHelper;
+use App\Http\Requests\ClassRoomStoreRequest;
 use App\Http\Resources\ClassRoomResource;
 use App\Http\Resources\PaginateResource;
 use App\Interfaces\ClassRoomRepositoriesInterface;
@@ -78,9 +79,32 @@ class ClassRoomController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ClassRoomStoreRequest $request)
     {
-        //
+        $request = $request->validated();
+
+        try {
+
+            $student = $this->classRoomRepositories->create($request);
+
+            return ResponseHelper::jsonResponse(
+                true,
+                'Data Class Room Berhasil Ditambahkan',
+                ClassRoomResource::make($student),
+                200
+            );
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Class Room Gagal Ditambahkan',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**

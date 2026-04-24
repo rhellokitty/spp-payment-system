@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface ClassRoomRepositoriesInterface
+interface TeacherRepositoriesInterface
 {
     public function getAll(
         ?string $search,
@@ -15,7 +15,11 @@ interface ClassRoomRepositoriesInterface
         ?int $rowPerPage
     );
 
-    public function create(
-        array $data
+    public function getById(
+        string $id
+    );
+
+    public function delete(
+        string $id
     );
 }
