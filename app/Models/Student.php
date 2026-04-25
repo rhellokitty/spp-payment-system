@@ -27,7 +27,9 @@ class Student extends Model
         return $query->whereHas('user', function ($query) use ($search) {
             $query->where('name', 'Like', '%' . $search . '%')
                 ->orWhere('username', 'Like', '%' . $search . '%')
-                ->orWhere('status', 'Like', '%' . $search . '%');
+                ->orWhere('parent_name', 'Like', '%' . $search . '%')
+                ->orWhere('status', 'Like', '%' . $search . '%')
+            ;
         });
     }
 

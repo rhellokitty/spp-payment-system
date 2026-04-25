@@ -29,7 +29,7 @@ class TeacherStoreRequest extends FormRequest
             'role' => 'required|in:super_admin,admin,teacher,student',
             'academic_title' => 'required|string',
             'phone_number' => 'required|string',
-            'email' => 'nullable|string',
+            'email' => 'nullable|string|unique:teachers,email',
         ];
     }
     public function attributes(): array

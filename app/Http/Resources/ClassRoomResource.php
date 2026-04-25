@@ -22,6 +22,7 @@ class ClassRoomResource extends JsonResource
             'start_year' => $this->start_year,
             'end_year' => $this->end_year,
             'teacher' => TeacherResource::make($this->teacher),
+            'student' => StudentResource::collection($this->whenLoaded('student')),
         ];
     }
 }

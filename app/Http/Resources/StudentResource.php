@@ -16,7 +16,6 @@ class StudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            // 'class_room_id' => $this->class_room_id,
             'birth_date' => $this->birth_date,
             'parent_name' => $this->parent_name,
             'parent_phone_number' => $this->parent_phone_number,
@@ -24,6 +23,7 @@ class StudentResource extends JsonResource
             'gender' => $this->gender,
             'status' => $this->status,
             'user' => new UserResource($this->user),
+            'classRoom' => ClassRoomResource::make($this->classRoom),
         ];
     }
 }

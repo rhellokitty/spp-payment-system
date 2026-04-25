@@ -27,6 +27,7 @@ class StudentStoreRequest extends FormRequest
             'username' => 'required|string|unique:users,username',
             'password' => 'required|string',
             'role' => 'required|in:super_admin,admin,teacher,student',
+            'class_room_id' => 'required|exists:class_rooms,id',
             'birth_date' => 'required|date',
             'parent_name' => 'required|string',
             'parent_phone_number' => 'required|string',

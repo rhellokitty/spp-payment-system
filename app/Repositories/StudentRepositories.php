@@ -15,7 +15,7 @@ class StudentRepositories implements StudentRepositoriesInterface
             if ($search) {
                 $query->search($search);
             }
-        })->latest()->with('user');
+        })->latest()->with('user', 'classRoom');
 
         if ($limit) {
             $query->limit($limit);
@@ -36,7 +36,7 @@ class StudentRepositories implements StudentRepositoriesInterface
 
     public function getById(string $id)
     {
-        $query = Student::where('id', $id)->with('user');
+        $query = Student::where('id', $id)->with('user', 'classRoom');
         return $query->first();
     }
 
@@ -56,6 +56,7 @@ class StudentRepositories implements StudentRepositoriesInterface
 
             $student = new Student();
             $student->user_id = $user->id;
+            $student->class_room_id = $data['class_room_id'] ?? null;
             $student->birth_date = $data['birth_date'];
             $student->parent_name = $data['parent_name'];
             $student->parent_phone_number = $data['parent_phone_number'];
@@ -88,6 +89,7 @@ class StudentRepositories implements StudentRepositoriesInterface
             ]);
 
             $student->user_id = $user->id;
+            $student->class_room_id = array_key_exists('class_room_id', $data) ? $data['class_room_id'] : $student->class_room_id;
             $student->birth_date = $data['birth_date'];
             $student->parent_name = $data['parent_name'];
             $student->parent_phone_number = $data['parent_phone_number'];
@@ -119,5 +121,13 @@ class StudentRepositories implements StudentRepositoriesInterface
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function removeFromClass(string $id)
+    {
+        $student = Student::find($id);
+        $student->class_room_id = null;
+        $student->save();
+        return $student;
     }
 }

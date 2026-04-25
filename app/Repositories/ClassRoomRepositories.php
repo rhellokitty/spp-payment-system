@@ -34,12 +34,41 @@ class ClassRoomRepositories implements ClassRoomRepositoriesInterface
         return $query->paginate($rowPerPage);
     }
 
+    public function getById(string $id)
+    {
+        $query = ClassRoom::where('id', $id)->with('teacher', 'student');
+        return $query->first();
+    }
+
     public function create(array $data)
     {
         DB::beginTransaction();
 
         try {
             $classRoom = new ClassRoom();
+
+            $classRoom->teacher_id = $data['teacher_id'] ?? null;
+            $classRoom->school_level = $data['school_level'];
+            $classRoom->name = $data['name'];
+            $classRoom->grade = $data['grade'];
+            $classRoom->start_year = $data['start_year'];
+            $classRoom->end_year = $data['end_year'];
+
+            $classRoom->save();
+            DB::commit();
+            return $classRoom;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function update(string $id, array $data)
+    {
+        DB::beginTransaction();
+
+        try {
+            $classRoom = ClassRoom::find($id);
 
             $classRoom->teacher_id = $data['teacher_id'];
             $classRoom->school_level = $data['school_level'];
@@ -51,6 +80,22 @@ class ClassRoomRepositories implements ClassRoomRepositoriesInterface
             $classRoom->save();
             DB::commit();
             return $classRoom;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function delete(string $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $student = ClassRoom::find($id);
+            $student->delete();
+
+            DB::commit();
+            return $student;
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());

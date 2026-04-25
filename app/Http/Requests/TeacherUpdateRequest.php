@@ -24,25 +24,21 @@ class TeacherUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $teacherId = $this->route('teacher');
-        $teacher = Teacher::find($teacherId);
-        $userId = $teacher?->user_id;
-
         return [
             'name' => 'required|string|max:255',
-            'username' => ['nullable', 'string', Rule::unique('users', 'username')->ignore($userId)],
+            'username' => 'nullable|string|unique:users,username,' . Teacher::find($this->route('teacher'))->user_id,
             'password' => 'nullable|string|min:8',
             'academic_title' => 'required|string',
             'phone_number' => 'required|string',
-            'email' => ['nullable', 'string', Rule::unique('teachers', 'email')->ignore($teacherId)],
+            'email' => 'nullable|string|unique:teachers,email,' . Teacher::find($this->route('teacher'))->id,
         ];
     }
 
     public function attributes(): array
     {
         return [
+            'username' => 'NIP',
             'email' => 'Email',
-            'nip' => 'NIP',
         ];
     }
 }

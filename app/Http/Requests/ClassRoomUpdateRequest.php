@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClassRoomStoreRequest extends FormRequest
+class ClassRoomUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,7 @@ class ClassRoomStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'teacher_id' => 'nullable|exists:teachers,id',
+            'teacher_id' => 'required|exists:teachers,id',
             'school_level' => 'required|string',
             'name' => 'required|string',
             'grade' => 'required|string',
