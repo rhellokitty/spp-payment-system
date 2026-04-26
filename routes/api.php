@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClassRoomController;
+use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
@@ -17,3 +18,6 @@ Route::get('classRoom/all/paginated', [ClassRoomController::class, 'getAllPagina
 
 Route::apiResource('teacher', TeacherController::class);
 Route::get('teacher/all/paginated', [TeacherController::class, 'getAllPaginated']);
+
+Route::apiResource('paymentType', PaymentTypeController::class);
+Route::get('paymentType/all/paginated', [PaymentTypeController::class, 'getAllPaginated']);

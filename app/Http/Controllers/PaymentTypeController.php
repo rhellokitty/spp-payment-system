@@ -2,17 +2,77 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseHelper;
+use App\Http\Resources\PaginateResource;
+use App\Http\Resources\PaymentTypeResource;
+use App\Interfaces\PaymentTypeRepositoriesInterface;
 use App\Models\PaymentType;
+use Exception;
 use Illuminate\Http\Request;
 
 class PaymentTypeController extends Controller
 {
+
+    private PaymentTypeRepositoriesInterface $paymentTypeRepositories;
+
+    public function __construct(PaymentTypeRepositoriesInterface $paymentTypeRepositories)
+    {
+        $this->paymentTypeRepositories = $paymentTypeRepositories;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $paymentTypes = $this->paymentTypeRepositories->getAll(
+                $request->search,
+                $request->limit,
+                true
+            );
+
+            return ResponseHelper::jsonResponse(true, 'Data Payment Type Berhasil Diambil', PaymentTypeResource::collection($paymentTypes), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Payment Type Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
+    }
+
+    public function getAllPaginated(Request $request)
+    {
+        $request = $request->validate([
+            'search' => 'nullable|string',
+            'row_per_page' => 'required|integer',
+        ]);
+
+        try {
+            $students = $this->paymentTypeRepositories->getAllPaginated(
+                $request['search'] ?? null,
+                $request['row_per_page']
+            );
+
+            return ResponseHelper::jsonResponse(true, 'Data Payment Type Berhasil Diambil', PaginateResource::make($students, PaymentTypeResource::class), 200);
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Payment Type Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**
@@ -26,9 +86,38 @@ class PaymentTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PaymentType $paymentType)
+    public function show(string $id)
     {
-        //
+        try {
+            $paymentType = $this->paymentTypeRepositories->getById($id);
+
+            if (!$paymentType) {
+                return ResponseHelper::jsonResponse(
+                    false,
+                    'Data Payment Type Tidak Ditemukan',
+                    null,
+                    404
+                );
+            }
+
+            return ResponseHelper::jsonResponse(
+                true,
+                'Data Payment Type Berhasil Diambil',
+                PaymentTypeResource::make($paymentType),
+                200
+            );
+        } catch (Exception $e) {
+            return ResponseHelper::jsonResponse(
+                false,
+                'Data Payment Type Gagal Diambil',
+                [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                500
+            );
+        }
     }
 
     /**

@@ -16,8 +16,10 @@ return new class extends Migration
 
             $table->string('name');
             $table->unsignedTinyInteger('due_day')->nullable();
+            $table->unsignedInteger('amount');
             $table->boolean('is_recurring')->default(false);
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
