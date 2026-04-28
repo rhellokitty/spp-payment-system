@@ -31,10 +31,6 @@ interface TransactionRepositoriesInterface
         array $data
     );
 
-    public function update(
-        string $id,
-        array $data
-    );
 
     public function handleWebhook(
         array $data

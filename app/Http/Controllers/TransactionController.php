@@ -147,46 +147,6 @@ class TransactionController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(TransactionUpdateRequest $request, string $id)
-    {
-        $request = $request->validated();
-
-        try {
-            $transaction = $this->transactionRepositories->getById($id);
-
-            if (!$transaction) {
-                return ResponseHelper::jsonResponse(
-                    false,
-                    'Data Transaction Tidak Ditemukan',
-                    null,
-                    404
-                );
-            }
-
-            $transaction = $this->transactionRepositories->update($id, $request);
-
-            return ResponseHelper::jsonResponse(
-                true,
-                'Data Transaction Berhasil Diupdate',
-                TransactionResource::make($transaction),
-                200
-            );
-        } catch (Exception $e) {
-            return ResponseHelper::jsonResponse(
-                false,
-                'Data Transaction Gagal Diupdate',
-                [
-                    'error' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
-                ],
-                500
-            );
-        }
-    }
 
     public function retry(TransactionInitiateRequest $request)
     {

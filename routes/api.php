@@ -33,4 +33,4 @@ Route::post('transaction/initiate-payment', [TransactionController::class, 'init
 Route::post('transaction/webhook', [TransactionController::class, 'webhook']);
 Route::get('transaction/all/paginated', [TransactionController::class, 'getAllPaginated']);
 
-Route::apiResource('transaction', TransactionController::class)->except('destroy');
+Route::apiResource('transaction', TransactionController::class)->except(['destroy', 'update']);

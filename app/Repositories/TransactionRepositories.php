@@ -15,8 +15,7 @@ class TransactionRepositories implements TransactionRepositoriesInterface
 {
     public function __construct(
         private MidtransSnapService $midtransSnapService
-    ) {
-    }
+    ) {}
 
     public function getAll(?string $search, ?int $limit, bool $execute)
     {
@@ -139,31 +138,6 @@ class TransactionRepositories implements TransactionRepositoriesInterface
     public function retry(array $data)
     {
         return $this->initiatePayment($data);
-    }
-
-    public function update(string $id, array $data)
-    {
-        DB::beginTransaction();
-
-        try {
-            $transaction = Transaction::find($id);
-
-            $transaction->gateway_reference = $data['gateway_reference'] ?? $transaction->gateway_reference;
-            $transaction->amount_paid = $data['amount_paid'] ?? $transaction->amount_paid;
-            $transaction->payment_method = $data['payment_method'] ?? $transaction->payment_method;
-            $transaction->status = $data['status'];
-            $transaction->paid_at = $this->resolvePaidAt($data, $transaction->paid_at);
-            $transaction->expired_at = $this->resolveExpiredAt($data, $transaction->expired_at);
-
-            $transaction->save();
-            $this->syncBillStatus($transaction->bill);
-
-            DB::commit();
-            return $transaction;
-        } catch (Exception $e) {
-            DB::rollBack();
-            throw new Exception($e->getMessage());
-        }
     }
 
     public function handleWebhook(array $data)
