@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\ClassRoom;
+use Database\Factories\StudentFactory;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -28,5 +30,20 @@ class ClassRoomFactory extends Factory
             'start_year' => $startYear,
             'end_year' => $startYear + 3,
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (ClassRoom $classRoom) {
+            $studentCount = fake()->numberBetween(20, 35);
+
+            UserFactory::new()->student()->count($studentCount)->create()->each(function ($user) use ($classRoom) {
+                StudentFactory::new()->create([
+                    'user_id' => $user->id,
+                    'class_room_id' => $classRoom->id,
+                    'status' => 'active',
+                ]);
+            });
+        });
     }
 }

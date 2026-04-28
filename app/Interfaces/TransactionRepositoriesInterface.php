@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface PaymentTypeRepositoriesInterface
+interface TransactionRepositoriesInterface
 {
     public function getAll(
         ?string $search,
@@ -23,12 +23,20 @@ interface PaymentTypeRepositoriesInterface
         array $data
     );
 
+    public function initiatePayment(
+        array $data
+    );
+
+    public function retry(
+        array $data
+    );
+
     public function update(
         string $id,
         array $data
     );
 
-    public function delete(
-        string $id
+    public function handleWebhook(
+        array $data
     );
 }

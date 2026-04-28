@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\ClassRoom;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class ClassRoomSeeder extends Seeder
 {
@@ -27,8 +26,7 @@ class ClassRoomSeeder extends Seeder
         ];
 
         foreach ($classrooms as $classroom) {
-            ClassRoom::create([
-                'id' => Str::uuid(),
+            ClassRoom::factory()->create([
                 'school_level' => 'SMP',
                 'name' => $classroom['name'],
                 'grade' => $classroom['grade'],

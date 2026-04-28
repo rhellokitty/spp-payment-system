@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\BillController;
 use App\Http\Controllers\ClassRoomController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +23,14 @@ Route::get('teacher/all/paginated', [TeacherController::class, 'getAllPaginated'
 
 Route::apiResource('paymentType', PaymentTypeController::class);
 Route::get('paymentType/all/paginated', [PaymentTypeController::class, 'getAllPaginated']);
+
+Route::post('bill/generate/classRoom', [BillController::class, 'generateByClassRoom']);
+Route::apiResource('bill', BillController::class);
+Route::get('bill/all/paginated', [BillController::class, 'getAllPaginated']);
+
+Route::post('transaction/retry', [TransactionController::class, 'retry']);
+Route::post('transaction/initiate-payment', [TransactionController::class, 'initiatePayment']);
+Route::post('transaction/webhook', [TransactionController::class, 'webhook']);
+Route::get('transaction/all/paginated', [TransactionController::class, 'getAllPaginated']);
+
+Route::apiResource('transaction', TransactionController::class)->except('destroy');

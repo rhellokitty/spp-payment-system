@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface PaymentTypeRepositoriesInterface
+interface BillRepositoriesInterface
 {
     public function getAll(
         ?string $search,
@@ -30,5 +30,9 @@ interface PaymentTypeRepositoriesInterface
 
     public function delete(
         string $id
+    );
+
+    public function generateByClassRoom(
+        array $data
     );
 }

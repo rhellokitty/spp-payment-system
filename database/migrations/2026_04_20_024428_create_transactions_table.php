@@ -14,11 +14,17 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->string('code')->unique();
+            $table->foreignUuid('bill_id')->constrained('bills')->restrictOnDelete();
+
+            $table->string('transaction_code')->unique();
+            $table->string('gateway_reference')->nullable();
+            $table->string('snap_token')->nullable();
+            $table->text('snap_redirect_url')->nullable();
+            $table->decimal('amount_paid', 10, 2);
             $table->string('payment_method');
-            $table->string('payment_status');
-            $table->decimal('total_amount', 10, 2);
-            $table->date('payment_date');
+            $table->string('status')->default('pending');
+            $table->dateTime('paid_at')->nullable();
+            $table->dateTime('expired_at')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

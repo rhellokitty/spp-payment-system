@@ -22,10 +22,18 @@ return new class extends Migration
                 ->restrictOnDelete();
 
             $table->decimal('amount', 10, 2);
+            $table->decimal('amount_snapshot', 10, 2)->nullable();
+            $table->string('payment_type_name_snapshot')->nullable();
+            $table->unsignedTinyInteger('billing_month')->nullable();
+            $table->year('billing_year')->nullable();
             $table->date('due_date');
-            $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
-            $table->year('start_year');
-            $table->year('end_year');
+            $table->date('paid_date')->nullable();
+            $table->string('status')->default('pending');
+
+            $table->unique(
+                ['student_id', 'payment_type_id', 'billing_month', 'billing_year'],
+                'bills_student_payment_period_unique'
+            );
 
             $table->softDeletes();
             $table->timestamps();
