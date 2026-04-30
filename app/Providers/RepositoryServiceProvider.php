@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Interfaces\BillRepositoriesInterface;
 use App\Interfaces\ClassRoomRepositoriesInterface;
+use App\Interfaces\DashboardRepoositoriesInterface;
 use App\Interfaces\PaymentTypeRepositoriesInterface;
 use App\Interfaces\StudentRepositoriesInterface;
 use App\Interfaces\TeacherRepositoriesInterface;
@@ -11,6 +12,7 @@ use App\Interfaces\TransactionRepositoriesInterface;
 use App\Interfaces\UserRepositoriesInterface;
 use App\Repositories\BillRepositories;
 use App\Repositories\ClassRoomRepositories;
+use App\Repositories\DashboardRepositories;
 use App\Repositories\PaymentTypeRepositories;
 use App\Repositories\StudentRepositories;
 use App\Repositories\TeacherRepositories;
@@ -32,6 +34,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TeacherRepositoriesInterface::class, TeacherRepositories::class);
         $this->app->bind(PaymentTypeRepositoriesInterface::class, PaymentTypeRepositories::class);
         $this->app->bind(TransactionRepositoriesInterface::class, TransactionRepositories::class);
+        $this->app->bind(DashboardRepoositoriesInterface::class, DashboardRepositories::class);
     }
 
     /**

@@ -13,7 +13,8 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        UserFactory::new()->student()->count(10)->create()->each(function ($user) {
+        UserFactory::new()->count(10)->create()->each(function ($user) {
+            $user->assignRole('student');
             StudentFactory::new()->create(['user_id' => $user->id]);
         });
     }

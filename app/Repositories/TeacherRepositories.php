@@ -51,8 +51,9 @@ class TeacherRepositories implements TeacherRepositoriesInterface
                 'name' => $data['name'],
                 'username' => $data['username'],
                 'password' => bcrypt($data['password']),
-                'role' => $data['role'],
             ]);
+
+            $user->assignRole('teacher');
 
             $teacher = new Teacher();
             $teacher->user_id = $user->id;
@@ -81,7 +82,7 @@ class TeacherRepositories implements TeacherRepositoriesInterface
             $user = $userRepositories->update($teacher->user_id, [
                 'name' => $data['name'],
                 'username' => $data['username'] ?? $teacher->user->username,
-                'password' => bcrypt($data['password']) ? bcrypt($data['password']) : $teacher->user->password,
+                'password' => !empty($data['password']) ? bcrypt($data['password']) : $teacher->user->password,
             ]);
 
             $teacher->user_id = $user->id;

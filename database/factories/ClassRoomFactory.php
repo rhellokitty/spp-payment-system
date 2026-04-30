@@ -37,7 +37,8 @@ class ClassRoomFactory extends Factory
         return $this->afterCreating(function (ClassRoom $classRoom) {
             $studentCount = fake()->numberBetween(20, 35);
 
-            UserFactory::new()->student()->count($studentCount)->create()->each(function ($user) use ($classRoom) {
+            UserFactory::new()->count($studentCount)->create()->each(function ($user) use ($classRoom) {
+                $user->assignRole('student');
                 StudentFactory::new()->create([
                     'user_id' => $user->id,
                     'class_room_id' => $classRoom->id,

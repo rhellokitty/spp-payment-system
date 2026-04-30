@@ -30,23 +30,8 @@ class UserFactory extends Factory
             'username' => fake()->unique()->numerify('##########'),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => $this->faker->randomElement(['super_admin', 'admin', 'teacher', 'student']),
             'remember_token' => Str::random(10),
         ];
-    }
-
-    public function student(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'role' => 'student',
-        ]);
-    }
-
-    public function teacher(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'role' => 'teacher',
-        ]);
     }
 
     /**

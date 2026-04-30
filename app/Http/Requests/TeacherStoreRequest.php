@@ -26,7 +26,6 @@ class TeacherStoreRequest extends FormRequest
             'name' => 'required|string|max:255',
             'username' => 'required|string|unique:users,username',
             'password' => 'required|string',
-            'role' => 'required|in:super_admin,admin,teacher,student',
             'academic_title' => 'required|string',
             'phone_number' => 'required|string',
             'email' => 'nullable|string|unique:teachers,email',

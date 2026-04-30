@@ -36,8 +36,12 @@ class ClassRoomRepositories implements ClassRoomRepositoriesInterface
 
     public function getById(string $id)
     {
-        $query = ClassRoom::where('id', $id)->with('teacher', 'student');
-        return $query->first();
+        return ClassRoom::where('id', $id)
+            ->with([
+                'teacher',
+                'student' => fn($q) => $q->latest()->with('user'),
+            ])
+            ->first();
     }
 
     public function create(array $data)

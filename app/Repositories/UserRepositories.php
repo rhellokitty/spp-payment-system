@@ -50,7 +50,6 @@ class UserRepositories implements UserRepositoriesInterface
             $user->name = $data['name'];
             $user->username = $data['username'];
             $user->password = bcrypt($data['password']);
-            $user->role = $data['role'];
             $user->save();
             DB::commit();
             return $user;
@@ -74,10 +73,6 @@ class UserRepositories implements UserRepositoriesInterface
 
             if (isset($data['password'])) {
                 $user->password = bcrypt($data['password']);
-            }
-
-            if (isset($data['role'])) {
-                $user->role = $data['role'];
             }
 
             $user->save();
